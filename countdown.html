@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            margin: 50px;
+            background-color: #f2f2f2;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #inputForm, #countdown, #modifyButton {
+            animation: fadeIn 1s ease-in-out;
+        }
+        input, button {
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #countdown {
+            margin-top: 20px;
+            font-size: 36px;
+        }
+        #timerDisplay pre {
+            display: inline; /* Display characters on the same line */
+            margin: 0;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1></h1>
+
+    <div id="inputForm">
+        <label for="eventTitle">Event Title:</label>
+        <input type="text" id="eventTitle" placeholder="Enter event title" required>
+
+        <br>
+
+        <label for="eventDateTime">Event Date and Time:</label>
+        <input type="datetime-local" id="eventDateTime" required>
+
+        <br>
+
+        <button onclick="startCountdown()">Start Countdown</button>
+    </div>
+
+    <div id="countdown"></div>
+    <div id="modifyButton"></div>
+
+    <script>
+        function startCountdown() {
+            var eventTitle = document.getElementById("eventTitle").value;
+            var eventDateTime = new Date(document.getElementById("eventDateTime").value).getTime();
+            var now = new Date().getTime();
+
+            if (eventDateTime > now) {
+                var timeDifference = eventDateTime - now;
+
+                var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown").innerHTML = "<h2>" + eventTitle + "</h2>" +
+                    "<div id='timerDisplay'>" +
+                    "<pre> " + days.toString().padStart(2, '0') + "</pre>" +
+                    "<pre>|</pre>" +
+                    "<pre> " + hours.toString().padStart(2, '0') + "</pre>" +
+                    "<pre>:</pre>" +
+                    "<pre> " + minutes.toString().padStart(2, '0') + "</pre>" +
+                    "<pre>:</pre>" +
+                    "<pre> " + seconds.toString().padStart(2, '0') + "</pre>" +
+                    "</div>";
+
+                document.getElementById("inputForm").style.display = "none"; // Hide input fields and button
+
+                var modifyButton = document.getElementById("modifyButton");
+                modifyButton.innerHTML = "<button onclick='modifyCountdown()'>Modify Countdown</button>";
+                modifyButton.style.marginTop = "20px";
+
+                setTimeout(startCountdown, 1000); // Update countdown every second
+            } else {
+                document.getElementById("countdown").innerHTML = "<p>Event has already occurred!</p>";
+            }
+        }
+
+        function modifyCountdown() {
+            document.getElementById("inputForm").style.display = "block"; // Show input fields and button
+            document.getElementById("countdown").innerHTML = ""; // Clear countdown
+            document.getElementById("modifyButton").innerHTML = ""; // Clear modify button
+        }
+    </script>
+</body>
+</html>
